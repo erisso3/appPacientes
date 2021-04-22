@@ -12,9 +12,11 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 
 // Modulos Propios
-import Formulario from './modules/User/Formulario';
-import Autetificacion from './modules/Login/Autetificacion';
-import Inicio from './modules/Inicio/inicio';
+
+
+import Home from './modules/Home/Home';
+import Description from './modules/Description/Description';
+import Favorites from './modules/Favorites/Favorites';
 
 const Stack = createStackNavigator();
 // const MyContext = React.createContext();
@@ -44,10 +46,10 @@ class App extends React.Component{
       }
       return(
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Inicio">
-            <Stack.Screen name="Autetificacion" component={Autetificacion} />
-            <Stack.Screen name="Formulario" component={Formulario} />
-            <Stack.Screen name="Inicio" component={Inicio}/>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Favorites" component={Favorites} />
+            <Stack.Screen name="Home" component={Home}/>
+            <Stack.Screen name="Description" component={Description}/>
           </Stack.Navigator>
         </NavigationContainer>
       );
