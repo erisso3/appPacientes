@@ -29,17 +29,46 @@ export default class Favorites extends Component {
 
 
     async componentDidMount() {
-        let movies = await AsyncStorage.getItem('movies');
-        movies = JSON.parse(movies);
-        console.log("movies favs: "+movies);
-        this.setState({ result: movies });
+        let userData = await AsyncStorage.getItem('userData')
+        userData = JSON.parse(userData);
+
+        let userMovies = await AsyncStorage.getItem('userMovies');
+        userMovies = JSON.parse(userMovies);
+        if (userMovies) {
+
+            userMovies.forEach(element => {
+
+                if (element.email == userData.email) {
+                    this.setState({
+                        result: element.movies
+                    });
+                }
+            });
+        } else {
+            console.log('Aun no hay nada en favs');
+        }
+
     }
-    
-    updateData = async() => {
-        let movies = await AsyncStorage.getItem('movies');
-        movies = JSON.parse(movies);
-        console.log("Update: ");
-        this.setState({ result: movies });
+
+    updateData = async () => {
+        let userData = await AsyncStorage.getItem('userData')
+        userData = JSON.parse(userData);
+
+        let userMovies = await AsyncStorage.getItem('userMovies');
+        userMovies = JSON.parse(userMovies);
+        if (userMovies) {
+
+            userMovies.forEach(element => {
+
+                if (element.email == userData.email) {
+                    this.setState({
+                        result: element.movies
+                    });
+                }
+            });
+        } else {
+            console.log('Aun no hay nada en favs');
+        }
     }
 
     render() {
