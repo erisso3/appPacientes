@@ -10,7 +10,7 @@ import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { theme } from '../components/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class Login extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class Login extends Component {
   }
 
 
-  LonLoginPressed = () => {
+  LonLoginPressed =async () => {
     const emailError = emailValidator(this.state.email.value)
     const passwordError = passwordValidator(this.state.password.value)
     if(emailError||passwordError){
@@ -46,11 +46,25 @@ export default class Login extends Component {
       });
       return
     }
-    
+    let userData={
+      email:this.state.email.value,
+      password:this.state.password.value
+    }
+    console.log('Email: '+this.state.email.value);
+    console.log('Password: '+this.state.password.value);
+    let users = await AsyncStorage.getItem('users');
+    users = JSON.parse(users);
+    var i=0
+    for(i=0;i<users.length;i++){
+      if(users[i].email==this.state.email.value&&users[i].password==this.state.password.value){
+        console.log("Usuario registrado");
+      }else{
+        console.log("Usuiario no valido");
+      }
+    }
   }
 
   render() {
-
     return (
       <Background>
          <BackButton goBack={this.props.navigation.goBack}/>
@@ -92,7 +106,7 @@ export default class Login extends Component {
       </Button>
       <View style={styles.row}>
         <Text>¿No tienes una cuenta? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
+        <TouchableOpacity onPress={() => this.props.navigation.replace('Register')}>
           <Text style={styles.link}>Registrate</Text>
         </TouchableOpacity>
       </View>

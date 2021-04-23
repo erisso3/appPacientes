@@ -35,7 +35,7 @@ export default class Register extends Component {
   }
 
 
-  LonRegisterPressed = () => {
+  LonRegisterPressed =async () => {
     const emailError = emailValidator(this.state.email.value)
     const passwordError = passwordValidator(this.state.password.value)
     const nameError=nameValidator(this.state.name.value);
@@ -66,18 +66,26 @@ export default class Register extends Component {
         password:this.state.password.value
     }
     let users = await AsyncStorage.getItem('users');
+    let numaux=0;
     users = JSON.parse(users);
     if(users){
-        users[users.length] = this.state.users;
+        users[users.length] = userData;
+        console.log('No soy nuevo');
+        numaux=users.length-1;
     }else{
-        console.log("is " + null);
+
+        console.log('Soy nuevo');
         users = [];
-        users[0] = this.state.users;
+        users[0] = userData;
+        numaux=0;
     }
-    
-    AsyncStorage.setItem('userData',JSON.stringify(userData));
-    console.log('Usuario guardado');
-    
+    AsyncStorage.setItem('users',JSON.stringify(users));
+    AsyncStorage.setItem('userData',JSON.stringify(users[numaux]));
+    console.log('Usuario guardado'); 
+    this.props.navigation.reset({
+        index: 0,
+        routes: [{ name: 'Perfil' }],
+    })
   }
 
   render() {
@@ -137,8 +145,8 @@ export default class Register extends Component {
       </Button>
       <View style={styles.row}>
         <Text>¿No tienes una cuenta? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
-          <Text style={styles.link}>Registrate</Text>
+        <TouchableOpacity onPress={() => this.props.navigation.replace('Login')}>
+          <Text style={styles.link}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
       </Background>
