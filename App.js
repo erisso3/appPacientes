@@ -22,6 +22,7 @@ import Favorites from './modules/Favorites/Favorites';
 import Inicio from './modules/Login/Inicio';
 import Login from './modules/Login/Login';
 import Register from './modules/Login/Register';
+import Perfil from './modules/Perfil/perfil';
 
 const Stack = createStackNavigator();
 // const MyContext = React.createContext();
@@ -63,6 +64,7 @@ class App extends React.Component{
             <Stack.Screen name="Inicio" component={Inicio}/>
             <Stack.Screen name="Login" component={Login}/>
             <Stack.Screen name="Register" component={Register}/>
+            <Stack.Screen name="Perfil" component={Perfil}/>
           </Stack.Navigator>
         </NavigationContainer>
         </Provider>
