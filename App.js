@@ -4,6 +4,8 @@ import React, {Component} from 'react'
 //Para React Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Provider } from 'react-native-paper'
+import { theme } from './modules/components/theme'
 
 
 // Para Native Base
@@ -17,6 +19,9 @@ import { Ionicons } from '@expo/vector-icons';
 import Home from './modules/Home/Home';
 import Description from './modules/Description/Description';
 import Favorites from './modules/Favorites/Favorites';
+import Inicio from './modules/Login/Inicio';
+import Login from './modules/Login/Login';
+import Register from './modules/Login/Register';
 
 const Stack = createStackNavigator();
 // const MyContext = React.createContext();
@@ -45,13 +50,22 @@ class App extends React.Component{
         return <AppLoading />;
       }
       return(
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
+        <Provider theme={theme}>
+          <NavigationContainer>
+          <Stack.Navigator 
+          initialRouteName="Inicio"
+          screenOptions={{
+            headerShown: false,
+          }}>
             <Stack.Screen name="Favorites" component={Favorites} />
             <Stack.Screen name="Home" component={Home}/>
             <Stack.Screen name="Description" component={Description}/>
+            <Stack.Screen name="Inicio" component={Inicio}/>
+            <Stack.Screen name="Login" component={Login}/>
+            <Stack.Screen name="Register" component={Register}/>
           </Stack.Navigator>
         </NavigationContainer>
+        </Provider>
       );
     }
 
