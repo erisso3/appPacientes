@@ -9,26 +9,42 @@ class Description extends Component {
         super(props);
         this.state = {
             movie: '',
-            isEnabled: false
+            isEnabled: false,
+            email: '',
+            isLogin: false,
+            userMovies: []
         }
     }
     async componentDidMount() {
-
-        console.log("DescriptionComponent: ", this.props)
+        let userData = await AsyncStorage.getItem('userData')
+        userData = JSON.parse(userData)
+        if (userData) {
+            this.setState(
+                {
+                    email: userData.email,
+                    isLogin: userData.isLogin
+                });
+        }
+        console.log("DescriptionComponent: ", userData)
         this.setState({ movie: this.props.route.params.movie });
-        let movies = await AsyncStorage.getItem('movies');
-        movies = JSON.parse(movies);
-        if(movies){
-            movies.forEach(element =>{
-                if(element.id == this.state.movie.id){
-                    var aux = this.state.isEnabled;
-                    this.setState({ isEnabled: !aux });
+        let userMovies = await AsyncStorage.getItem('userMovies');
+        userMovies = JSON.parse(userMovies);
+        if (userMovies) {
+            this.setState({ userMovies: userMovies });
+
+            userMovies.forEach(element => {
+                if (element.email == userData.email) {
+                    element.movies.forEach(aux => {
+                        if (aux.id == this.state.movie.id) {
+                            var aux2 = this.state.isEnabled;
+                            this.setState({ isEnabled: !aux2 });
+                        }
+                    });
                 }
             });
-        }else{
+        } else {
             console.log('Aun no hay nada en favs');
         }
-        
     }
 
     favs = () => {
@@ -38,7 +54,7 @@ class Description extends Component {
     home = () => {
         console.log('Home');
         console.log(this.props);
-        this.props.navigation.navigate('Home')
+        this.props.navigation.navigate('Home');
     }
 
     generos = (params) => {
@@ -58,35 +74,55 @@ class Description extends Component {
 
         this.setState({ isEnabled: !aux });
 
-        let movies = await AsyncStorage.getItem('movies');
-        movies = JSON.parse(movies);
         console.log(!aux);
         if (!aux) {
-
-            if (movies) {
-                movies[movies.length] = this.state.movie;
-            } else {
-                console.log("is " + null);
-                movies = [];
-                movies[0] = this.state.movie;
+            console.log("agregar a favs");
+            if(this.state.userMovies.length > 0){
+                this.state.userMovies.forEach(element => {
+                    console.log("element "+element);
+                    if (element.email == this.state.email) {
+                        console.log("correo encontrado "+element.correo);
+                        if (element.movies) {
+                            element.movies[element.movies.length] = this.state.movie;
+                        } else {
+                            console.log("is " + null);
+                            element.movies = [];
+                            element.movies[0] = this.state.movie;
+                        }
+                    }
+                });
+            }else{
+                console.log("era null");
+                var mov= [];
+                mov[0] = this.state.movie;
+                this.state.userMovies[0]={
+                    email: this.state.email,
+                    movies: mov
+                };
             }
-
+            
         } else {
-            console.log("movies: " + movies);
-            console.log("movies size: " + movies.length);
-            var index = 0;
-            for (var i = 0; i < movies.length; i++) {
-                if (movies[i].id == this.state.movie.id) {
-                    console.log(movies[i].title);
-                    index = i + 1;
+            console.log("Eliminar de favs");
+            this.state.userMovies.forEach(element => {
+                if (element.email == this.state.email) {
+                    console.log("movies: " + element.movies);
+                    console.log("movies size: " + element.movies.length);
+                    var index = 0;
+                    for (var i = 0; i < element.movies.length; i++) {
+                        if (element.movies[i].id == this.state.movie.id) {
+                            console.log(element.movies[i].title);
+                            index = i + 1;
+                        }
+                        element.movies[i] = element.movies[index];
+                        console.log(element.movies[i].title);
+                        index++;
+                    }
+                    element.movies.pop();
                 }
-                movies[i] = movies[index];
-                index++;
-            }
-            movies.pop();
+            });
         }
 
-        AsyncStorage.setItem('movies', JSON.stringify(movies));
+        AsyncStorage.setItem('userMovies', JSON.stringify(this.state.userMovies));
 
     }
 

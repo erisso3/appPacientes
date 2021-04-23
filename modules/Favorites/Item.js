@@ -19,28 +19,34 @@ class Item extends React.Component {
 
         this.setState({ isEnabled: !aux });
         
-        let movies = await AsyncStorage.getItem('movies');
-        movies = JSON.parse(movies);
+        let userData = await AsyncStorage.getItem('userData')
+        userData = JSON.parse(userData);
+
+        let userMovies = await AsyncStorage.getItem('userMovies');
+        userMovies = JSON.parse(userMovies);
+        
         console.log(!aux);
         if (!aux == false) {
 
-            console.log("movies size: " + movies.length);
-            var index = 0;
-            for (var i = 0; i < movies.length; i++) {
-                if (movies[i].id == this.props.datos.id) {
-                    console.log(movies[i].title);
-                    index = i + 1;
+            console.log("Eliminar de favs en favs");
+            userMovies.forEach(element => {
+                if (element.email == userData.email) {
+                    //console.log("movies: " + element.movies);
+                    console.log("movies size: " + element.movies.length);
+                    var index = 0;
+                    for (var i = 0; i < element.movies.length; i++) {
+                        if (element.movies[i].id == this.state.movie.id) {
+                            console.log(element.movies[i].title);
+                            index = i + 1;
+                        }
+                        element.movies[i] = element.movies[index];
+                        
+                        index++;
+                    }
+                    element.movies.pop();
                 }
-                movies[i] = movies[index];
-                index++;
-            }
-            
-            this.setState({ isEnabled: true });
-
-            movies.pop();
-            console.log("quedan: "+movies.length);
-            AsyncStorage.setItem('movies', JSON.stringify(movies));
-
+            });
+            AsyncStorage.setItem('userMovies', JSON.stringify(userMovies));
             this.props.lista();
         }
         
