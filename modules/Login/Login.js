@@ -55,13 +55,20 @@ export default class Login extends Component {
     let users = await AsyncStorage.getItem('users');
     users = JSON.parse(users);
     var i=0
+    var redirreccion=false;
     for(i=0;i<users.length;i++){
       if(users[i].email==this.state.email.value&&users[i].password==this.state.password.value){
         console.log("Usuario registrado");
+        AsyncStorage.setItem('userData',JSON.stringify(users[i]));
+        redirreccion=true;
       }else{
         console.log("Usuiario no valido");
       }
     }
+    if(redirreccion==true){
+      this.props.navigation.navigate('Home');
+    }
+    
   }
 
   render() {

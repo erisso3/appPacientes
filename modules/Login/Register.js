@@ -82,10 +82,7 @@ export default class Register extends Component {
     AsyncStorage.setItem('users',JSON.stringify(users));
     AsyncStorage.setItem('userData',JSON.stringify(users[numaux]));
     console.log('Usuario guardado'); 
-    this.props.navigation.reset({
-        index: 0,
-        routes: [{ name: 'Perfil' }],
-    })
+    this.props.navigation.navigate('Home')
   }
 
   render() {

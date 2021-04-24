@@ -27,6 +27,10 @@ export default class Home extends Component {
     this.props.navigation.navigate('Home')
   }
 
+  perfil = () => {
+    this.props.navigation.navigate('Perfil')
+  }
+
   async componentDidMount() {
     let respnose = await API.getData();
     //console.log(respnose.data.movies);
@@ -76,7 +80,7 @@ export default class Home extends Component {
               <Icon name="person" />
               <Text>Favs</Text>
             </Button>
-            <Button vertical >
+            <Button vertical onPress={this.perfil}>
               <Icon name="person" />
               <Text>User profile</Text>
             </Button>
