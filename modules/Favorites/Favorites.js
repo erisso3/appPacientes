@@ -26,6 +26,9 @@ export default class Favorites extends Component {
         console.log(this.props);
         this.props.navigation.navigate('Home')
     }
+    perfil = () => {
+        this.props.navigation.navigate('Perfil')
+      }
 
 
     async componentDidMount() {
@@ -100,7 +103,7 @@ export default class Favorites extends Component {
                             <Text>Favs</Text>
                         </Button>
                         <Button vertical >
-                            <Icon name="person" />
+                            <Icon name="person" onPress={this.perfil}/>
                             <Text>User profile</Text>
                         </Button>
                     </FooterTab>

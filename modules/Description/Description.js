@@ -57,6 +57,11 @@ class Description extends Component {
         this.props.navigation.navigate('Home');
     }
 
+
+    perfil = () => {
+        this.props.navigation.navigate('Perfil')
+      }
+
     generos = (params) => {
         var aux = '';
         if (params == null) {
@@ -176,7 +181,7 @@ class Description extends Component {
                             <Text>Favs</Text>
                         </Button>
                         <Button vertical >
-                            <Icon name="person" />
+                            <Icon name="person" onPress={this.perfil}/>
                             <Text>User profile</Text>
                         </Button>
                     </FooterTab>
