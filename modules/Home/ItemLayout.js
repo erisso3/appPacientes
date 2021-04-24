@@ -17,9 +17,9 @@ class ItemLayout extends React.Component {
   description = () => {
     this.props.navigation.navigate('Description', {
       movie: this.state.movie
-    })
-    
+    });
   }
+  
   render() {
     return (
       <TouchableOpacity onPress={this.description}>

@@ -119,7 +119,6 @@ class Description extends Component {
                             index = i + 1;
                         }
                         element.movies[i] = element.movies[index];
-                        console.log(element.movies[i].title);
                         index++;
                     }
                     element.movies.pop();

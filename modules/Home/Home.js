@@ -24,6 +24,7 @@ export default class Home extends Component {
   home = () => {
     console.log('Home');
     console.log(this.props);
+    
     this.props.navigation.navigate('Home')
   }
 
@@ -32,26 +33,44 @@ export default class Home extends Component {
   }
 
   async componentDidMount() {
+    //console.log("crear component "+this.props); 
+    console.log("home cat "+this.props);
     let respnose = await API.getData();
-    //console.log(respnose.data.movies);
     
-    /*
+
+    let UserData = await AsyncStorage.getItem('userData');
+    UserData = JSON.parse(UserData);
+    let categoriasUser = await AsyncStorage.getItem('categoriasUser');
+    categoriasUser = JSON.parse(categoriasUser);
+    console.log("nuevos "+categoriasUser);
+    // //console.log(respnose.data.movies);
+    var categorias = [];
+    if (categoriasUser) {
+      categoriasUser.forEach(element => {
+        if (element.email == UserData.email) {
+          categorias = element.categorias;
+        }
+      });
+    }
+
     var generoMovies = [];
-    respnose.data.movies.forEach(mov =>{
-      mov.genres.forEach(aux =>{
-          if(cat1 === aux || cat2 === aux || cat3 === aux){
-            generoMovies.push(mov);
-          }
+    respnose.data.movies.forEach(mov => {
+      mov.genres.forEach(aux => {
+        if (categorias.includes(aux)) {
+          generoMovies.push(mov);
+        }
       });
     });
-    this.setState({ result: generoMovies })
-    */
-    this.setState({ result: respnose.data.movies })
 
-    AsyncStorage.removeItem('movies');
+    this.setState({ result: generoMovies });
+    //this.setState({ result: respnose.data.movies });
+    
+    //this.setState({ result: respnose.data.movies });
+
+    AsyncStorage.removeItem('dataMovies');
+    AsyncStorage.setItem('dataMovies', JSON.stringify(respnose.data.movies));
     //console.log(this.props);
   }
-
 
   render() {
 
