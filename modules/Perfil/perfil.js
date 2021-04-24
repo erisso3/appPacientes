@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Header, Content, Card, CardItem, Text, Body, Footer, FooterTab, Button, Icon, Switch } from 'native-base';
+import { Container, Header, Content, Text, Footer, FooterTab, Button, Icon} from 'native-base';
 import ButtonN from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, ScrollView, StyleSheet, StatusBar, FlatList } from 'react-native';
-import { isEnabled } from 'react-native/Libraries/Performance/Systrace';
+import { FlatList, StyleSheet } from 'react-native';
+import { Card, Title, Paragraph } from 'react-native-paper';
 
 import Item from './Item';
 export default class CardHeaderFooterExample extends Component {
@@ -161,21 +161,29 @@ export default class CardHeaderFooterExample extends Component {
   render() {
     return (
       <Container>
-        <Header />
+        <Header style={{ backgroundColor: '#5699DC'}}>
+          <Text style={styles.header}>Perfil</Text>
+        </Header>
         <Content>
-
-          <Text>Datos del usuario</Text>
-
-          <Text>
-            Nombre: {this.state.name.value}
-          </Text>
-          <Text>
-            Email: {this.state.email.value}
-          </Text>
-          <Text>
-            Password: {this.state.password.value}
-          </Text>
-
+        <Title>Datos del usuario</Title>
+        <Card>
+          <Card.Content>
+            <Title>Nombre</Title>
+            <Paragraph>{this.state.name.value}</Paragraph>
+          </Card.Content>
+        </Card>
+        <Card>
+          <Card.Content>
+            <Title>Email</Title>
+            <Paragraph>{this.state.email.value}</Paragraph>
+          </Card.Content>
+        </Card>
+        <Card>
+          <Card.Content>
+            <Title>Contraseña</Title>
+            <Paragraph>{this.state.password.value}</Paragraph>
+          </Card.Content>
+        </Card>
           <FlatList
             data={this.state.categorias}
             extraData={this.state.categorias}
@@ -219,3 +227,13 @@ export default class CardHeaderFooterExample extends Component {
 
 
 
+
+
+const styles = StyleSheet.create({
+  header: {
+    color: '#fff',
+    textAlignVertical: 'center',
+    fontSize: 30,
+    fontStyle: 'italic'
+  }
+});
