@@ -28,8 +28,38 @@ export default class Home extends Component {
     this.props.navigation.navigate('Home')
   }
 
-  perfil = () => {
-    this.props.navigation.navigate('Perfil')
+  perfil = async() => {
+    let dataMovies = await AsyncStorage.getItem('dataMovies');
+    dataMovies = JSON.parse(dataMovies);
+    let userData = await AsyncStorage.getItem('userData')
+    userData = JSON.parse(userData);
+
+    var categorias = [];
+
+    dataMovies.forEach(element => {
+      if (element.genres) {
+        element.genres.forEach(genero => {
+          if (!categorias.includes(genero)) {
+            categorias.push(genero);
+          }
+        });
+      }
+    });
+    console.log("CATEGORIAS EXISTENTES "+categorias);
+    this.setState({ categorias: categorias });
+
+    var auxiliar = [];
+    let categoriasUser = await AsyncStorage.getItem('categoriasUser');
+    categoriasUser = JSON.parse(categoriasUser);
+    if (categoriasUser) {
+      categoriasUser.forEach(element => {
+        if (element.email == userData.email) {
+          auxiliar = element.categorias;
+        }
+      });
+    }
+    console.log("CATEGORIAS USUARIO "+ auxiliar);
+    this.props.navigation.navigate('Perfil',{categorias: auxiliar});
   }
 
   async componentDidMount() {
@@ -45,10 +75,14 @@ export default class Home extends Component {
     console.log("nuevos "+categoriasUser);
     // //console.log(respnose.data.movies);
     var categorias = [];
+    var bandera = false;
     if (categoriasUser) {
       categoriasUser.forEach(element => {
         if (element.email == UserData.email) {
-          categorias = element.categorias;
+            if(element.categorias){
+              categorias = element.categorias;
+              bandera = true;
+            }  
         }
       });
     }
@@ -61,8 +95,12 @@ export default class Home extends Component {
         }
       });
     });
-
-    this.setState({ result: generoMovies });
+    if(bandera){
+      this.setState({ result: generoMovies });
+    }else{
+      this.setState({ result: respnose.data.movies });
+    }
+    
     //this.setState({ result: respnose.data.movies });
     
     //this.setState({ result: respnose.data.movies });

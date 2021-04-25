@@ -58,8 +58,38 @@ class Description extends Component {
     }
 
 
-    perfil = () => {
-        this.props.navigation.navigate('Perfil')
+    perfil = async() => {
+        let dataMovies = await AsyncStorage.getItem('dataMovies');
+        dataMovies = JSON.parse(dataMovies);
+        let userData = await AsyncStorage.getItem('userData')
+        userData = JSON.parse(userData);
+    
+        var categorias = [];
+    
+        dataMovies.forEach(element => {
+          if (element.genres) {
+            element.genres.forEach(genero => {
+              if (!categorias.includes(genero)) {
+                categorias.push(genero);
+              }
+            });
+          }
+        });
+        console.log("CATEGORIAS EXISTENTES "+categorias);
+        this.setState({ categorias: categorias });
+    
+        var auxiliar = [];
+        let categoriasUser = await AsyncStorage.getItem('categoriasUser');
+        categoriasUser = JSON.parse(categoriasUser);
+        if (categoriasUser) {
+          categoriasUser.forEach(element => {
+            if (element.email == userData.email) {
+              auxiliar = element.categorias;
+            }
+          });
+        }
+        console.log("CATEGORIAS USUARIO "+ auxiliar);
+        this.props.navigation.navigate('Perfil',{categorias: auxiliar});
       }
 
     generos = (params) => {
@@ -78,24 +108,32 @@ class Description extends Component {
         var aux = this.state.isEnabled;
 
         this.setState({ isEnabled: !aux });
-
+        var bandera = false;
         console.log(!aux);
         if (!aux) {
             console.log("agregar a favs");
             if(this.state.userMovies.length > 0){
                 this.state.userMovies.forEach(element => {
-                    console.log("element "+element);
                     if (element.email == this.state.email) {
                         console.log("correo encontrado "+element.correo);
+                        bandera = true;
                         if (element.movies) {
                             element.movies[element.movies.length] = this.state.movie;
                         } else {
-                            console.log("is " + null);
                             element.movies = [];
                             element.movies[0] = this.state.movie;
                         }
                     }
                 });
+
+                if(!bandera){
+                    var movi = [];
+                    movi[0] = this.state.movie;
+                    this.state.userMovies[this.state.userMovies.length]={
+                        email: this.state.email,
+                        movies: movi
+                    }
+                }
             }else{
                 console.log("era null");
                 var mov= [];
@@ -169,22 +207,22 @@ class Description extends Component {
                     </Row>
                 </Content>
                 <Footer>
-                    <FooterTab>
-                        <Button vertical onPress={this.home}>
-                            <Icon name="home" />
-                            <Text>Home</Text>
-                        </Button>
-                        <Button vertical onPress={this.favs} >
-                            {/* <Badge ><Text>51</Text></Badge> */}
-                            <Icon name="person" />
-                            <Text>Favs</Text>
-                        </Button>
-                        <Button vertical >
-                            <Icon name="person" onPress={this.perfil}/>
-                            <Text>User profile</Text>
-                        </Button>
-                    </FooterTab>
-                </Footer>
+          <FooterTab>
+            <Button active vertical onPress={this.home}>
+              <Icon name="home" />
+              <Text>Home</Text>
+            </Button>
+            <Button vertical onPress={this.favs} >
+              {/* <Badge ><Text>51</Text></Badge> */}
+              <Icon name="heart" />
+              <Text>Favs</Text>
+            </Button>
+            <Button vertical onPress={this.perfil}>
+              <Icon name="person" />
+              <Text>User</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
             </Container>
         )
     }
