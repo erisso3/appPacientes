@@ -26,10 +26,39 @@ export default class Favorites extends Component {
         console.log(this.props);
         this.props.navigation.navigate('Home')
     }
-    perfil = () => {
-        this.props.navigation.navigate('Perfil')
+    perfil = async() => {
+        let dataMovies = await AsyncStorage.getItem('dataMovies');
+        dataMovies = JSON.parse(dataMovies);
+        let userData = await AsyncStorage.getItem('userData')
+        userData = JSON.parse(userData);
+    
+        var categorias = [];
+    
+        dataMovies.forEach(element => {
+          if (element.genres) {
+            element.genres.forEach(genero => {
+              if (!categorias.includes(genero)) {
+                categorias.push(genero);
+              }
+            });
+          }
+        });
+        console.log("CATEGORIAS EXISTENTES "+categorias);
+        this.setState({ categorias: categorias });
+    
+        var auxiliar = [];
+        let categoriasUser = await AsyncStorage.getItem('categoriasUser');
+        categoriasUser = JSON.parse(categoriasUser);
+        if (categoriasUser) {
+          categoriasUser.forEach(element => {
+            if (element.email == userData.email) {
+              auxiliar = element.categorias;
+            }
+          });
+        }
+        console.log("CATEGORIAS USUARIO "+ auxiliar);
+        this.props.navigation.navigate('Perfil',{categorias: auxiliar});
       }
-
 
     async componentDidMount() {
         let userData = await AsyncStorage.getItem('userData')

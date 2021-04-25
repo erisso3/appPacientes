@@ -24,7 +24,7 @@ export default class CardHeaderFooterExample extends Component {
       },
       users: '',
       categorias: [],
-      categoriasAdd: []
+      categoriasAdd: this.props.route.params.categorias ? this.props.route.params.categorias: []
     };
   }
   favs = () => {
@@ -37,8 +37,38 @@ export default class CardHeaderFooterExample extends Component {
     this.props.navigation.navigate('Home')
   }
 
-  perfil = () => {
-    this.props.navigation.navigate('Perfil')
+  perfil = async() => {
+    let dataMovies = await AsyncStorage.getItem('dataMovies');
+    dataMovies = JSON.parse(dataMovies);
+    let userData = await AsyncStorage.getItem('userData')
+    userData = JSON.parse(userData);
+
+    var categorias = [];
+
+    dataMovies.forEach(element => {
+      if (element.genres) {
+        element.genres.forEach(genero => {
+          if (!categorias.includes(genero)) {
+            categorias.push(genero);
+          }
+        });
+      }
+    });
+    console.log("CATEGORIAS EXISTENTES "+categorias);
+    this.setState({ categorias: categorias });
+
+    var auxiliar = [];
+    let categoriasUser = await AsyncStorage.getItem('categoriasUser');
+    categoriasUser = JSON.parse(categoriasUser);
+    if (categoriasUser) {
+      categoriasUser.forEach(element => {
+        if (element.email == userData.email) {
+          auxiliar = element.categorias;
+        }
+      });
+    }
+    console.log("CATEGORIAS USUARIO "+ auxiliar);
+    this.props.navigation.navigate('Perfil',{categorias: auxiliar});
   }
 
 
@@ -80,21 +110,20 @@ export default class CardHeaderFooterExample extends Component {
         });
       }
     });
-    console.log(categorias);
+    console.log("CATEGORIAS EXISTENTES "+categorias);
     this.setState({ categorias: categorias });
 
 
-    let categoriasUser = await AsyncStorage.getItem('categoriasUser');
-    categoriasUser = JSON.parse(categoriasUser);
-    if (categoriasUser) {
-      categoriasUser.forEach(element => {
-        if (element.email == this.state.email.value) {
-          console.log("mis catg "+element.categorias);
-          this.setState({ categoriasAdd: element.categorias });
-        }
-      });
-    }
-    console.log("catADD "+ this.state.categoriasAdd);
+    // let categoriasUser = await AsyncStorage.getItem('categoriasUser');
+    // categoriasUser = JSON.parse(categoriasUser);
+    // if (categoriasUser) {
+    //   categoriasUser.forEach(element => {
+    //     if (element.email == this.state.email.value) {
+    //       this.setState({ categoriasAdd: element.categorias });
+    //     }
+    //   });
+    // }
+    // console.log("CATEGORIAS USUARIO "+ this.state.categoriasAdd);
 
   }
   async componentDidUpdate(){
@@ -118,7 +147,7 @@ export default class CardHeaderFooterExample extends Component {
         this.state.categoriasAdd[this.state.categoriasAdd.length] = categoria;
       } else {
         this.state.categoriasAdd = [];
-        this.state.categoriasAdd[this.state.categoriasAdd.length] = categoria;
+        this.state.categoriasAdd[0] = categoria;
       }
 
     } else {
@@ -133,13 +162,21 @@ export default class CardHeaderFooterExample extends Component {
     this.setState({ categoriasAdd: this.state.categoriasAdd });
     let categoriasUser = await AsyncStorage.getItem('categoriasUser');
     categoriasUser = JSON.parse(categoriasUser);
-
+    //victoe
+    var bandera = false;
     if (categoriasUser) {
       categoriasUser.forEach(element => {
         if (element.email == this.state.email.value) {
+          bandera= true;
           element.categorias = this.state.categoriasAdd;
         }
       });
+      if(!bandera){
+        categoriasUser[categoriasUser.length] = {
+          email: this.state.email.value,
+          categorias: this.state.categoriasAdd
+        }
+      }
       this.setState({ categoriasUser: categoriasUser });
     } else {
       categoriasUser = [];
@@ -151,7 +188,7 @@ export default class CardHeaderFooterExample extends Component {
 
 
     AsyncStorage.setItem('categoriasUser', JSON.stringify(categoriasUser));
-    console.log(this.state.categoriasAdd);
+    console.log("nuevas categorias "+this.state.categoriasAdd);
     this.props.navigation.reset({
       index: 0,
       routes: [{ name: 'Home' }],
