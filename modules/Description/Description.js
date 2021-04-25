@@ -134,8 +134,8 @@ class Description extends Component {
         const { isEnabled } = this.state;
         return (
             <Container>
-                <Header>
-                    <Text style={styles.header}>Peliculas populares</Text>
+                <Header style={{ backgroundColor: '#5699DC'}}>
+                    <Text style={styles.header}>Detalles</Text>
                 </Header>
                 <Content>
                     <Row style={styles.row}>
@@ -170,7 +170,7 @@ class Description extends Component {
                 </Content>
                 <Footer>
                     <FooterTab>
-                        <Button active vertical onPress={this.home}>
+                        <Button vertical onPress={this.home}>
                             <Icon name="home" />
                             <Text>Home</Text>
                         </Button>

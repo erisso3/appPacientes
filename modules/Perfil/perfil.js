@@ -161,7 +161,7 @@ export default class CardHeaderFooterExample extends Component {
   render() {
     return (
       <Container>
-        <Header style={{ backgroundColor: '#5699DC'}}>
+        <Header style={{ backgroundColor: '#5699DC'}}> 
           <Text style={styles.header}>Perfil</Text>
         </Header>
         <Content>
@@ -209,7 +209,7 @@ export default class CardHeaderFooterExample extends Component {
             </Button>
             <Button vertical >
               {/* <Badge ><Text>51</Text></Badge> */}
-              <Icon name="person" onPress={this.favs} />
+              <Icon name="heart" onPress={this.favs} />
               <Text>Favs</Text>
             </Button>
             <Button active vertical >
