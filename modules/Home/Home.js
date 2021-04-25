@@ -76,7 +76,7 @@ export default class Home extends Component {
 
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: '#5699DC'}}> 
           <Text style={styles.header}>Peliculas populares</Text>
         </Header>
         <Content>
@@ -96,12 +96,12 @@ export default class Home extends Component {
             </Button>
             <Button vertical onPress={this.favs} >
               {/* <Badge ><Text>51</Text></Badge> */}
-              <Icon name="person" />
+              <Icon name="heart" />
               <Text>Favs</Text>
             </Button>
             <Button vertical onPress={this.perfil}>
               <Icon name="person" />
-              <Text>User profile</Text>
+              <Text>User</Text>
             </Button>
           </FooterTab>
         </Footer>

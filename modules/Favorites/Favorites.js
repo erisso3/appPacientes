@@ -78,8 +78,8 @@ export default class Favorites extends Component {
 
         return (
             <Container>
-                <Header>
-                    <Text style={styles.header}>Peliculas populares</Text>
+                <Header style={{ backgroundColor: '#5699DC'}}>
+                    <Text style={styles.header}>Peliculas favoritas</Text>
                 </Header>
                 <Content>
                     <FlatList
@@ -93,13 +93,13 @@ export default class Favorites extends Component {
                 </Content>
                 <Footer>
                     <FooterTab>
-                        <Button active vertical onPress={this.home}>
+                        <Button vertical onPress={this.home}>
                             <Icon name="home" />
                             <Text>Home</Text>
                         </Button>
-                        <Button vertical onPress={this.favs} >
+                        <Button active vertical onPress={this.favs} >
                             {/* <Badge ><Text>51</Text></Badge> */}
-                            <Icon name="person" />
+                            <Icon name="heart" />
                             <Text>Favs</Text>
                         </Button>
                         <Button vertical >

@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import TextInput from '../components/TextInput'
 import Button from '../components/Button';
 import BackButton from '../components/BackButton';
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, KeyboardAvoidingView } from 'react-native'
 import { theme } from '../components/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
@@ -77,6 +77,7 @@ export default class Login extends Component {
          <BackButton goBack={this.props.navigation.goBack}/>
           <Logo/>
           <Header>Bienvenido de nuevo</Header>
+          
           <TextInput
         label="Correo electronico"
         returnKeyType="next"
@@ -108,6 +109,7 @@ export default class Login extends Component {
         errorText={this.state.password.error}
         secureTextEntry
       />
+      
       <Button mode="contained" onPress={this.LonLoginPressed} >
       Iniciar sesión
       </Button>
