@@ -12,6 +12,7 @@ import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Container, Content } from 'native-base';
 
 
 export default class Register extends Component {
@@ -88,6 +89,8 @@ export default class Register extends Component {
   render() {
 
     return (
+      <Container>
+        <Content>
       <Background>
          <BackButton goBack={this.props.navigation.goBack}/>
           <Logo/>
@@ -147,6 +150,8 @@ export default class Register extends Component {
         </TouchableOpacity>
       </View>
       </Background>
+      </Content>
+      </Container>
     );
   }
 }
