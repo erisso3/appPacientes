@@ -91,7 +91,7 @@ export default class Login extends Component {
       userData.id_paciente=response.paciente.id_paciente;
       AsyncStorage.setItem('userData',JSON.stringify(userData));
       console.log(JSON.stringify(userData));
-      this.props.navigation.navigate('Perfil');
+      this.props.navigation.navigate('MisCitas');
 
     }
     
