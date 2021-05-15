@@ -12,11 +12,24 @@ import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container, Content } from 'native-base';
+import API from '../Utils/API'
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      name:{
+        value:'',
+        error:''
+    },
+    ape_pat:{
+      value:'',
+      error:''
+    },
+    ape_mat:{
+      value:'',
+      error:''
+    },
       email: {
         value: '',
         error: ''
@@ -48,12 +61,42 @@ export default class Login extends Component {
       return
     }
     let userData = {
-      email: this.state.email.value,
-      password: this.state.password.value
+        name:'',
+        email:'',
+        password:'',
+        ape_pat:'',
+        ape_mat:'',
+        id_paciente:0
     }
+
     console.log('Email: ' + this.state.email.value);
     console.log('Password: ' + this.state.password.value);
-    let users = await AsyncStorage.getItem('users');
+    const data = new FormData();
+    data.append('usuario', this.state.email.value);
+    data.append('password', this.state.password.value);
+    let response = await API.Login(data);
+    console.log(response);
+    if(response=="no"){
+      console.log("Usuario no valido");
+    }else{
+      console.log("Usario valido");
+      console.log(response.paciente);
+      console.log(response.paciente.nombre);
+      userData.name=response.paciente.nombre;
+      console.log("Nombre"+userData.name);
+      userData.email=response.paciente.usuario;
+      userData.password=response.paciente.password;
+      userData.ape_pat=response.paciente.ape_pat;
+      userData.ape_mat=response.paciente.ape_mat;
+      userData.id_paciente=response.paciente.id_paciente;
+      AsyncStorage.setItem('userData',JSON.stringify(userData));
+      console.log(JSON.stringify(userData));
+      this.props.navigation.navigate('Perfil');
+
+    }
+    
+    
+    /*let users = await AsyncStorage.getItem('users');
     users = JSON.parse(users);
     var i = 0
     var redirreccion = false;
@@ -68,14 +111,14 @@ export default class Login extends Component {
     }
     if (redirreccion == true) {
       this.props.navigation.navigate('Home');
-    }
+    }*/
 
   }
 
   render() {
     return (
-      <Container>
-        <Content>
+      // <Container>
+      //   <Content>
           <Background>
 
             <BackButton goBack={this.props.navigation.goBack} />
@@ -125,8 +168,8 @@ export default class Login extends Component {
             </View>
 
           </Background>
-        </Content>
-      </Container>
+      //   </Content>
+      // </Container>
     );
   }
 }
