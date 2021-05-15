@@ -1,25 +1,25 @@
 import React, { Component } from 'react'
 import { StyleSheet, ImageBackground, KeyboardAvoidingView, Text } from "react-native";
-import { theme } from './theme';
-
-import { Dimensions } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-//const windowWidth = Dimensions.get('screen').width;
-const windowHeight = Dimensions.get('window').height;
+import { theme } from './theme'
 
 export default function Background({ children }) {
     return (
-      
+      <ImageBackground
+        source={require('../../assets/bg6.jpg')}
+        resizeMode="repeat"
+        style={styles.background}
+      >
         <KeyboardAvoidingView style={styles.container} behavior="padding">
           {children}
         </KeyboardAvoidingView>
+      </ImageBackground>
     )
   }
 
 const styles = StyleSheet.create({
   background: {
+    flex: 1,
     width: '100%',
-    height:710,
     backgroundColor: theme.colors.surface,
   },
   container: {

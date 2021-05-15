@@ -1,8 +1,12 @@
+
 const URL_list_doctores = 'https://ProyectoClinica.somee.com/Doctor/ListarDoctores';
 const URL_agendar_cita = 'https://ProyectoClinica.somee.com/Citas/AgendarCita';
 const URL_list_citas = 'https://ProyectoClinica.somee.com/Citas/MisCitas';
-class API {
+const URL_Login='https://ProyectoClinica.somee.com/Login/LoginMovil';
+const URL_agregarPaciente='https://ProyectoClinica.somee.com/Login/RegistroMovil';
+const URL_editarPaciente='https://ProyectoClinica.somee.com/Login/EditarMovil';
 
+class API {
     async getDoctores() {
         const query = await fetch(URL_list_doctores,
             {
@@ -56,7 +60,29 @@ class API {
         const data = query.json();
         return data;
     }
+    async Login(data){
+        const query= await fetch(URL_Login,{
+            method:'POST',
+            body:data
+        });
+        return query.json();
+    }
 
+    async agregarPaciente(data){
+        const query= await fetch(URL_agregarPaciente,{
+            method:'POST',
+            body:data
+        });
+        return query.json();
+    }
+
+    async editarPaciente(data){
+        const query= await fetch(URL_editarPaciente,{
+            method:'POST',
+            body:data
+        });
+        return query.json();
+    }
 }
 
 export default new API();
