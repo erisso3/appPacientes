@@ -13,6 +13,7 @@ import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container, Content } from 'native-base';
+import API from '../Utils/API'
 
 
 export default class Register extends Component {
@@ -22,6 +23,14 @@ export default class Register extends Component {
     name:{
         value:'',
         error:''
+    },
+    ape_pat:{
+      value:'',
+      error:''
+    },
+    ape_mat:{
+      value:'',
+      error:''
     },
       email: {
         value:'',
@@ -61,11 +70,49 @@ export default class Register extends Component {
       });
       return
     }
+
+    
     let userData={
         name:this.state.name.value,
         email:this.state.email.value,
-        password:this.state.password.value
+        password:this.state.password.value,
+        ape_pat:this.state.ape_pat.value,
+        ape_mat:this.state.ape_mat.value,
+        id_paciente:0
     }
+    const data = new FormData();
+    data.append('nombre', userData.name);
+    data.append('ape_pat', userData.ape_pat);
+    data.append('ape_mat', userData.ape_mat);
+    data.append('usuario', userData.email);
+    data.append('password', userData.password);
+    console.log('Nombre: '+userData.name);
+    console.log('Ape_pat: '+userData.ape_pat);
+    console.log('Ape_mat: '+userData.ape_mat);
+    console.log('Usuario: '+userData.email);
+    console.log('Password: '+userData.password);
+    let respnose = await API.agregarPaciente(data);
+    console.log(respnose.result);
+    if(respnose.result==true){
+      console.log("Todo bien");
+      const datalogin = new FormData();
+      datalogin.append('usuario', userData.email);
+      datalogin.append('password', userData.password);
+      let responselogin = await API.Login(datalogin);
+      if(responselogin=="no"){
+        console.log("Usuario no valido");
+      }else{
+        userData.id_paciente=responselogin.paciente.id_paciente;
+        AsyncStorage.setItem('userData',JSON.stringify(userData));
+        this.props.navigation.navigate('Perfil');
+  
+      }
+    }else{
+      console.log("Ocurrio un error");
+    }
+    //AsyncStorage.setItem('userData',JSON.stringify(userData));
+    //this.props.navigation.navigate('Perfil')
+    /*
     let users = await AsyncStorage.getItem('users');
     let numaux=0;
     users = JSON.parse(users);
@@ -84,13 +131,14 @@ export default class Register extends Component {
     AsyncStorage.setItem('userData',JSON.stringify(users[numaux]));
     console.log('Usuario guardado'); 
     this.props.navigation.navigate('Home')
+    */
   }
 
   render() {
 
     return (
-      <Container>
-        <Content>
+      // <Container>
+      //   <Content>
       <Background>
          <BackButton goBack={this.props.navigation.goBack}/>
           <Logo/>
@@ -108,6 +156,34 @@ export default class Register extends Component {
             error={!!this.state.name.error}
             errorText={this.state.name.error}
             name="name"
+        />
+        <TextInput
+            label="Apellido Peterno"
+            returnKeyType="next"
+            value={this.state.ape_pat.value}
+            onChangeText={(ape_pat) => this.setState({
+                ape_pat: {
+                  ...this.state.ape_pat,
+                  value: ape_pat,
+                }
+              })}
+            error={!!this.state.ape_pat.error}
+            errorText={this.state.ape_pat.error}
+            name="ape_pat"
+        />
+        <TextInput
+            label="Apellido Materno"
+            returnKeyType="next"
+            value={this.state.ape_mat.value}
+            onChangeText={(ape_mat) => this.setState({
+                ape_mat: {
+                  ...this.state.ape_mat,
+                  value: ape_mat,
+                }
+              })}
+            error={!!this.state.ape_mat.error}
+            errorText={this.state.ape_mat.error}
+            name="ape_mat"
         />
         <TextInput
             label="Correo electronico"
@@ -150,8 +226,8 @@ export default class Register extends Component {
         </TouchableOpacity>
       </View>
       </Background>
-      </Content>
-      </Container>
+      // </Content>
+      // </Container>
     );
   }
 }
