@@ -6,11 +6,13 @@ import Header from '../components/Header';
 import TextInput from '../components/TextInput'
 import Button from '../components/Button';
 import BackButton from '../components/BackButton';
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View,ToastAndroid, Platform,Alert } from 'react-native'
 import { theme } from '../components/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
+import{ape_patValidator}from '../helpers/ape_patValidator';
+import{ape_matValidator}from '../helpers/ape_matValidator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Container, Content } from 'native-base';
 import API from '../Utils/API'
@@ -49,7 +51,9 @@ export default class Register extends Component {
     const emailError = emailValidator(this.state.email.value)
     const passwordError = passwordValidator(this.state.password.value)
     const nameError=nameValidator(this.state.name.value);
-    if(emailError||passwordError||nameError){
+    const ape_patError=ape_patValidator(this.state.ape_pat.value);
+    const ape_matError=ape_matValidator(this.state.ape_mat.value);
+    if(emailError||passwordError||nameError||ape_patError||ape_matError){
       this.setState({
         email: {
           ...this.state.email,
@@ -66,6 +70,18 @@ export default class Register extends Component {
         name: {
           ...this.state.name,
           error: nameError,
+        }
+      });
+      this.setState({
+        ape_pat: {
+          ...this.state.ape_pat,
+          error: ape_patError,
+        }
+      });
+      this.setState({
+        ape_mat: {
+          ...this.state.ape_mat,
+          error: ape_matError,
         }
       });
       return
@@ -108,6 +124,25 @@ export default class Register extends Component {
   
       }
     }else{
+      if(Platform.OS=='android'){
+        ToastAndroid.showWithGravityAndOffset(
+          "Error al registrar",
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50
+        );
+      }else{
+        if(Platform.OS === 'ios'){
+          Alert.alert(
+            "Error",
+            "Ocurrio un error al registrar al usuario",
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+          );
+        }
+      }
       console.log("Ocurrio un error");
     }
     //AsyncStorage.setItem('userData',JSON.stringify(userData));
@@ -141,7 +176,6 @@ export default class Register extends Component {
       //   <Content>
       <Background>
          <BackButton goBack={this.props.navigation.goBack}/>
-          <Logo/>
           <Header>Crear una cuenta</Header>
           <TextInput
             label="Nombre"

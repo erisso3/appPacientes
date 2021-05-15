@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import TextInput from '../components/TextInput'
 import Button from '../components/Button';
 import BackButton from '../components/BackButton';
-import { TouchableOpacity, StyleSheet, View, KeyboardAvoidingView } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, ToastAndroid, Platform,Alert } from 'react-native'
 import { theme } from '../components/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
@@ -78,6 +78,25 @@ export default class Login extends Component {
     console.log(response);
     if(response=="no"){
       console.log("Usuario no valido");
+      if(Platform.OS=='android'){
+        ToastAndroid.showWithGravityAndOffset(
+          "Error al iniciar sessión",
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50
+        );
+      }else{
+        if(Platform.OS === 'ios'){
+          Alert.alert(
+            "Error",
+            "Los datos no coinciden",
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+          );
+        }
+      }
     }else{
       console.log("Usario valido");
       console.log(response.paciente);
@@ -94,25 +113,6 @@ export default class Login extends Component {
       this.props.navigation.navigate('MisCitas');
 
     }
-    
-    
-    /*let users = await AsyncStorage.getItem('users');
-    users = JSON.parse(users);
-    var i = 0
-    var redirreccion = false;
-    for (i = 0; i < users.length; i++) {
-      if (users[i].email == this.state.email.value && users[i].password == this.state.password.value) {
-        console.log("Usuario registrado");
-        AsyncStorage.setItem('userData', JSON.stringify(users[i]));
-        redirreccion = true;
-      } else {
-        console.log("Usuiario no valido");
-      }
-    }
-    if (redirreccion == true) {
-      this.props.navigation.navigate('Home');
-    }*/
-
   }
 
   render() {
