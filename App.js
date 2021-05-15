@@ -15,14 +15,12 @@ import { Ionicons } from '@expo/vector-icons';
 
 // Modulos Propios
 
-
-import Home from './modules/Home/Home';
-import Description from './modules/Description/Description';
-import Favorites from './modules/Favorites/Favorites';
 import Inicio from './modules/Login/Inicio';
 import Login from './modules/Login/Login';
 import Register from './modules/Login/Register';
 import Perfil from './modules/Perfil/perfil';
+import FormCita from './modules/FormCita/FormCita';
+import MisCitas from './modules/MisCitas/MisCitas';
 
 const Stack = createStackNavigator();
 // const MyContext = React.createContext();
@@ -58,9 +56,8 @@ class App extends React.Component{
           screenOptions={{
             headerShown: false,
           }}>
-            <Stack.Screen name="Favorites" component={Favorites} />
-            <Stack.Screen name="Home" component={Home}/>
-            <Stack.Screen name="Description" component={Description}/>
+            <Stack.Screen name="MisCitas" component={MisCitas} />
+            <Stack.Screen name="RegistroCita" component={FormCita}/>
             <Stack.Screen name="Inicio" component={Inicio}/>
             <Stack.Screen name="Login" component={Login}/>
             <Stack.Screen name="Register" component={Register}/>
