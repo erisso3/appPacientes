@@ -1,6 +1,7 @@
 import { Container, Header, Content, Button, Text, Card, CardItem, Footer, FooterTab, Icon, Item } from 'native-base';
 import React, { Component } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import API from '../Utils/API'
 import ItemCita from './ItemCita';
@@ -28,7 +29,9 @@ export default class MisCitas extends Component {
     }
 
     async componentDidMount() {
-        let respnose = await API.getCitas(1);
+        let UserData = await AsyncStorage.getItem('userData');
+        UserData = JSON.parse(UserData);
+        let respnose = await API.getCitas(UserData.id_paciente);
         this.setState({ listCitas: respnose.lista });
         //console.log(respnose);
     }

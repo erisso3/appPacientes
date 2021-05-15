@@ -104,7 +104,7 @@ export default class Register extends Component {
       }else{
         userData.id_paciente=responselogin.paciente.id_paciente;
         AsyncStorage.setItem('userData',JSON.stringify(userData));
-        this.props.navigation.navigate('Perfil');
+        this.props.navigation.navigate('MisCitas');
   
       }
     }else{

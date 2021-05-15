@@ -2,6 +2,7 @@ import { Container, Content, Form, Item, Input, Label, Header, Text, Button, Foo
 import React, { Component } from 'react';
 import { StyleSheet, Picker, ToastAndroid } from 'react-native';
 import DatePicker from 'react-native-datepicker'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import API from '../Utils/API'
 
@@ -86,6 +87,9 @@ export default class FormCita extends Component {
         let respnose = await API.getDoctores();
         this.setState({ listDoctores: respnose.lista });
         this.getDateNow();
+        let UserData = await AsyncStorage.getItem('userData');
+        UserData = JSON.parse(UserData);
+        this.setState({id_paciente:UserData.id_paciente});
         //console.log(respnose.lista);
     }
 
