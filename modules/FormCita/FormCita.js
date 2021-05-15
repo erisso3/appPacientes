@@ -1,6 +1,6 @@
 import { Container, Content, Form, Item, Input, Label, Header, Text, Button, Footer, FooterTab, Icon } from 'native-base';
 import React, { Component } from 'react';
-import { StyleSheet, Picker, ToastAndroid } from 'react-native';
+import { StyleSheet, Picker, ToastAndroid, Platform,Alert} from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,8 +14,8 @@ export default class FormCita extends Component {
             id_paciente:1,
             listDoctores: [],
             doctor: 0,
-            date: "",
-            minDate:'',
+            date: "2016-05-15",
+            minDate:'2016-05-15',
             hora: '9:00 A.M',
             observacion: '',
             error:''
@@ -58,30 +58,52 @@ export default class FormCita extends Component {
                 this.setState({observacion:''});
                 this.setState({hora:'9:00 A.M'});
                 this.getDateNow();
-
+                if(Platform.OS === 'android'){
+                    ToastAndroid.showWithGravityAndOffset(
+                        "Cita registrada exitosamente",
+                        ToastAndroid.LONG,
+                        ToastAndroid.BOTTOM,
+                        25,
+                        50
+                      );
+                }else{
+                    if(Platform.OS === 'ios'){
+                        Alert.alert(
+                            "Exito",
+                            "Tu cita fue agendada con exito",
+                            [
+                              { text: "OK", onPress: () => console.log("OK Pressed") }
+                            ]
+                          );
+                    }
+                }
+                
+            }
+        }else{
+            this.setState({error:'Le hace falta seleccionar el doctor o la descipción del padecimiento es muy corta'});
+            if(Platform.OS === 'android'){
                 ToastAndroid.showWithGravityAndOffset(
-                    "Cita registrada exitosamente",
+                    "!Faltan datos! :(",
                     ToastAndroid.LONG,
                     ToastAndroid.BOTTOM,
                     25,
                     50
                   );
+            }else{
+                if(Platform.OS === 'ios'){
+                    Alert.alert(
+                        "!Recórcholis!",
+                        "Faltan",
+                        [
+                          { text: "OK", onPress: () => console.log("OK Pressed") }
+                        ]
+                      );
+                }
             }
-        }else{
-            this.setState({error:'Le hace falta seleccionar el doctor o la descipción del padecimiento es muy corta'});
-            ToastAndroid.showWithGravityAndOffset(
-                "!Faltan datos! :(",
-                ToastAndroid.LONG,
-                ToastAndroid.BOTTOM,
-                25,
-                50
-              );
-        }
-
-        
-
-        
+            
+        }     
     }
+
 
     async componentDidMount() {
         let respnose = await API.getDoctores();
@@ -97,10 +119,11 @@ export default class FormCita extends Component {
         const tiempoTranscurrido = Date.now();
         const hoy = new Date(tiempoTranscurrido);
         var formato =hoy.toLocaleDateString().split('/');
-        var dia = Number.parseInt(formato[1]);
-        var mes = Number.parseInt(formato[0]);
+        var mes = Number.parseInt(formato[1]);
+        var dia = Number.parseInt(formato[0]);
         var anio = hoy.getFullYear();
-        var fecha = dia+'-'+mes+'-'+anio;
+        var fecha = anio+'-'+mes+'-'+dia;
+        console.log("Prueba: "+fecha);
         this.setState({date:fecha});
         this.setState({minDate:fecha});
     }

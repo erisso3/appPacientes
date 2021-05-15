@@ -11,11 +11,15 @@ import {
 } from "native-base";
 import ButtonN from "../components/Button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StyleSheet, Alert, Modal, Pressable, View } from "react-native";
+import { StyleSheet, Alert, Modal, Pressable, View,KeyboardAvoidingView,ToastAndroid, Platform } from "react-native";
 import { Card, Title, Paragraph } from "react-native-paper";
 import TextInput from "../components/TextInput";
 import API from "../Utils/API";
-
+import { emailValidator } from '../helpers/emailValidator';
+import { passwordValidator } from '../helpers/passwordValidator';
+import { nameValidator } from '../helpers/nameValidator';
+import{ape_patValidator}from '../helpers/ape_patValidator';
+import{ape_matValidator}from '../helpers/ape_matValidator';
 import Item from "./Item";
 export default class CardHeaderFooterExample extends Component {
   constructor(props) {
@@ -104,6 +108,48 @@ export default class CardHeaderFooterExample extends Component {
   };
 
   actualizardatos = async () => {
+
+    const emailError = emailValidator(this.state.email.value)
+    const passwordError = passwordValidator(this.state.password.value)
+    const nameError=nameValidator(this.state.name.value);
+    const ape_patError=ape_patValidator(this.state.ape_pat.value);
+    const ape_matError=ape_matValidator(this.state.ape_mat.value);
+    if(emailError||passwordError||nameError||ape_patError||ape_matError){
+      this.setState({
+        email: {
+          ...this.state.email,
+          error: emailError,
+        }
+      });
+      this.setState({
+        password: {
+          ...this.state.password,
+          error: passwordError,
+        }
+      });
+      this.setState({
+        name: {
+          ...this.state.name,
+          error: nameError,
+        }
+      });
+      this.setState({
+        ape_pat: {
+          ...this.state.ape_pat,
+          error: ape_patError,
+        }
+      });
+      this.setState({
+        ape_mat: {
+          ...this.state.ape_mat,
+          error: ape_matError,
+        }
+      });
+      return
+    }
+
+
+
     let userData = {
       name: this.state.name.value,
       email: this.state.email.value,
@@ -138,12 +184,38 @@ export default class CardHeaderFooterExample extends Component {
       if (responselogin == "no") {
         console.log("Usuario no valido");
       } else {
+
         this.setModalVisible(false);
         userData.id_paciente = responselogin.paciente.id_paciente;
         AsyncStorage.setItem("userData", JSON.stringify(userData));
+        this.setState({
+          password: {
+            ...this.state.password,
+            value: '',
+          },
+        });
         this.props.navigation.navigate("Perfil");
       }
     } else {
+      if(Platform.OS=='android'){
+        ToastAndroid.showWithGravityAndOffset(
+          "Error al editar",
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50
+        );
+      }else{
+        if(Platform.OS === 'ios'){
+          Alert.alert(
+            "Error",
+            "Ocurrio un error al editar su usuario",
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+          );
+        }
+      }
       console.log("Ocurrio un error");
     }
   };
@@ -212,6 +284,8 @@ export default class CardHeaderFooterExample extends Component {
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 <Text style={styles.modalText}>Editar Perfil</Text>
+                <KeyboardAvoidingView behavior='position'
+        keyboardVerticalOffset={32}>
                 <TextInput
                   label="Nombre"
                   returnKeyType="next"
@@ -295,7 +369,7 @@ export default class CardHeaderFooterExample extends Component {
                   errorText={this.state.password.error}
                   name="password"
                 />
-
+                </KeyboardAvoidingView>
                 <ButtonN
                   style={styles.buttonOpen}
                   onPress={this.actualizardatos}
