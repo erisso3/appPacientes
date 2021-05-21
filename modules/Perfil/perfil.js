@@ -392,7 +392,7 @@ export default class CardHeaderFooterExample extends Component {
         </Content>
         <Footer>
           <FooterTab>
-            <Button active vertical onPress={this.registrarCita}>
+            <Button vertical onPress={this.registrarCita}>
               <Icon name="newspaper" />
               <Text>Registro</Text>
             </Button>
@@ -400,7 +400,7 @@ export default class CardHeaderFooterExample extends Component {
               <Icon name="clipboard" />
               <Text>Citas</Text>
             </Button>
-            <Button vertical onPress={this.perfil}>
+            <Button active vertical onPress={this.perfil}>
               <Icon name="person" />
               <Text>User</Text>
             </Button>
