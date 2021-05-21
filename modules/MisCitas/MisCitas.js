@@ -56,11 +56,11 @@ export default class MisCitas extends Component {
                 </Content>
                 <Footer>
                 <FooterTab>
-                        <Button active vertical onPress={this.registrarCita}>
+                        <Button vertical onPress={this.registrarCita}>
                             <Icon name="newspaper" />
                             <Text>Registro</Text>
                         </Button>
-                        <Button vertical onPress={this.misCitas} >
+                        <Button active vertical onPress={this.misCitas} >
                             <Icon name="clipboard" />
                             <Text>Citas</Text>
                         </Button>
